@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>SISTEMA IA - DOUBLE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:black;
+color:white;
+overflow:hidden;
+}
+
+/* MATRIX */
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* PAINEL */
+
+#painel{
+
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+
+width:340px;
+
+background:#000;
+padding:25px;
+
+border-radius:25px;
+
+box-shadow:0 0 40px red;
+
+text-align:center;
+
+}
+
+/* TITULO */
+
+.title{
+
+font-size:24px;
+color:red;
+font-weight:bold;
+text-shadow:0 0 15px red;
+
+margin-bottom:10px;
+
+}
+
+/* RELÓGIO */
+
+.clock{
+
+font-size:14px;
+opacity:.8;
+margin-bottom:20px;
+
+}
+
+/* BOTÃO */
+
+button{
+
+width:100%;
+padding:15px;
+
+border:none;
+border-radius:20px;
+
+background:red;
+color:white;
+
+font-weight:bold;
+font-size:16px;
+
+box-shadow:0 0 20px red;
+
+margin-bottom:20px;
+
+}
+
+/* CAIXA SINAL */
+
+.sinal-box{
+
+border:2px solid red;
+border-radius:20px;
+padding:20px;
+
+box-shadow:0 0 20px red;
+
+}
+
+/* BOLA */
+
+.ball{
+
+width:110px;
+height:110px;
+
+border-radius:50%;
+
+margin:0 auto 10px auto;
+
+animation:pulse 1.5s infinite;
+
+}
+
+/* CORES */
+
+.red{
+
+background:radial-gradient(circle,#ff4040,#990000);
+
+box-shadow:0 0 30px red;
+
+}
+
+.black{
+
+background:radial-gradient(circle,#555,#000);
+
+box-shadow:0 0 20px #444;
+
+}
+
+/* ANIMAÇÃO */
+
+@keyframes pulse{
+
+0%{transform:scale(1)}
+50%{transform:scale(1.15)}
+100%{transform:scale(1)}
+
+}
+
+.next{
+
+color:red;
+font-weight:bold;
+margin-top:10px;
+
+}
+
+.protecao{
+
+margin-top:8px;
+font-size:14px;
+
+}
+
+.gale{
+
+font-size:13px;
+opacity:.8;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="painel">
+
+<div class="title">IA DOUBLE</div>
+
+<div class="clock" id="hora"></div>
+
+<button onclick="gerarSinal()">GERAR SINAL</button>
+
+<div class="sinal-box">
+
+<div id="sinal"></div>
+
+<div class="next">JOGAR NA PRÓXIMA RODADA</div>
+
+<div class="protecao" id="protecao"></div>
+
+<div class="gale">Apostar até G1</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* RELÓGIO BRASILIA */
+
+function atualizarHora(){
+
+let hora = new Date().toLocaleTimeString(
+"pt-BR",
+{timeZone:"America/Sao_Paulo"}
+)
+
+document.getElementById("hora").innerText="⏰ Brasília "+hora
+
+}
+
+setInterval(atualizarHora,1000)
+
+atualizarHora()
+
+/* GERAR SINAL */
+
+function gerarSinal(){
+
+let cor = Math.random() < 0.5 ? "red" : "black"
+
+let protecao = Math.random() < 0.1
+
+let bola = document.createElement("div")
+
+bola.classList.add("ball")
+
+bola.classList.add(cor)
+
+let sinal = document.getElementById("sinal")
+
+sinal.innerHTML=""
+
+sinal.appendChild(bola)
+
+if(protecao){
+
+document.getElementById("protecao").innerText="🛡 Proteção no Branco"
+
+}else{
+
+document.getElementById("protecao").innerText=""
+
+}
+
+}
+
+/* GERAR AUTOMÁTICO POR HORÁRIO */
+
+setInterval(()=>{
+
+let agora = new Date()
+
+let minuto = agora.getMinutes()
+
+if(minuto % 4 === 0){
+
+gerarSinal()
+
+}
+
+},15000)
+
+/* MATRIX */
+
+const canvas=document.getElementById("matrix")
+
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+const letters="0123456789"
+const fontSize=14
+
+const columns=canvas.width/fontSize
+
+const drops=[]
+
+for(let x=0;x<columns;x++)
+drops[x]=1
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="red"
+ctx.font=fontSize+"px monospace"
+
+for(let i=0;i<drops.length;i++){
+
+let text=letters.charAt(Math.random()*letters.length)
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize)
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+
+drops[i]=0
+
+drops[i]++
+
+}
+
+}
+
+setInterval(draw,33)
+
+</script>
+
+</body>
+</html>
