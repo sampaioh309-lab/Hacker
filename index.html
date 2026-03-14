@@ -1,99 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>SHARKBOT AI</title>
-
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<title>SISTEMA IA - DOUBLE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
-body{
+*{
 margin:0;
-background:#000;
-color:white;
+padding:0;
+box-sizing:border-box;
 font-family:Arial;
-text-align:center;
 }
 
-.container{
-max-width:900px;
-margin:auto;
-padding:40px;
-}
-
-h1{
-color:#00ffff;
-font-size:48px;
-}
-
-#assinatura{
-color:#00ffffaa;
-margin-bottom:20px;
-}
-
-button{
-padding:14px 24px;
-font-size:18px;
-background:#00ffff;
-border:none;
-border-radius:10px;
-cursor:pointer;
-margin-top:20px;
-}
-
-#previewBox{
-position:relative;
-display:inline-block;
-}
-
-#preview{
-max-width:600px;
-width:100%;
-border-radius:10px;
-border:2px solid #00ffff44;
-}
-
-#scan{
-position:absolute;
-left:0;
-width:100%;
-height:4px;
-background:#00ffff;
-box-shadow:0 0 20px #00ffff;
-animation:scan 2s linear infinite;
-display:none;
-}
-
-@keyframes scan{
-0%{top:0}
-50%{top:100%}
-100%{top:0}
-}
-
-#barra{
-width:100%;
-height:22px;
-background:#111;
-border-radius:10px;
-margin-top:20px;
+body{
+background:black;
+color:white;
 overflow:hidden;
-display:none;
-}
-
-#progresso{
-height:100%;
-width:0%;
-background:#00ffff;
-color:black;
-font-weight:bold;
-line-height:22px;
-}
-
-#resultado{
-margin-top:30px;
-font-size:22px;
-line-height:36px;
 }
 
 canvas{
@@ -103,6 +27,166 @@ left:0;
 z-index:-1;
 }
 
+#painel{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:340px;
+background:#000;
+padding:25px;
+border-radius:25px;
+box-shadow:0 0 40px red;
+text-align:center;
+}
+
+.title{
+font-size:24px;
+color:red;
+font-weight:bold;
+text-shadow:0 0 15px red;
+margin-bottom:10px;
+}
+
+.clock{
+font-size:14px;
+opacity:.8;
+margin-bottom:20px;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:20px;
+background:linear-gradient(90deg,#ff0000,#ff3b3b);
+color:white;
+font-weight:bold;
+font-size:18px;
+cursor:pointer;
+box-shadow:0 0 25px red;
+margin-bottom:20px;
+}
+
+.sinal-box{
+border:2px solid red;
+border-radius:20px;
+padding:25px;
+box-shadow:0 0 20px red;
+position:relative;
+}
+
+.container-sinal{
+position:relative;
+width:200px;
+height:200px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.mira-fundo{
+position:absolute;
+width:190px;
+height:190px;
+
+background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'>\
+<circle cx='110' cy='110' r='90' stroke='red' stroke-width='3' fill='none'/>\
+<circle cx='110' cy='110' r='60' stroke='red' stroke-width='2' fill='none'/>\
+<line x1='110' y1='0' x2='110' y2='220' stroke='red' stroke-width='2'/>\
+<line x1='0' y1='110' x2='220' y2='110' stroke='red' stroke-width='2'/>\
+<circle cx='110' cy='5' r='6' fill='red'/>\
+<circle cx='110' cy='215' r='6' fill='red'/>\
+<circle cx='5' cy='110' r='6' fill='red'/>\
+<circle cx='215' cy='110' r='6' fill='red'/>\
+</svg>");
+
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
+opacity:0.6;
+}
+
+.ball{
+width:80px;
+height:80px;
+border-radius:50%;
+z-index:2;
+animation:pulsar 1.5s infinite;
+}
+
+.red{
+background:red;
+box-shadow:0 0 25px red;
+}
+
+.black{
+background:black;
+border:3px solid red;
+box-shadow:0 0 20px red;
+}
+
+@keyframes pulsar{
+
+0%{transform:scale(1);}
+50%{transform:scale(1.15);}
+100%{transform:scale(1);}
+
+}
+
+.next{
+color:red;
+font-weight:bold;
+margin-top:15px;
+}
+
+.protecao{
+margin-top:8px;
+font-size:14px;
+}
+
+.gale{
+font-size:13px;
+opacity:.8;
+}
+
+.progress-box{
+margin-top:15px;
+display:none;
+}
+
+.progress-bar{
+width:100%;
+height:18px;
+background:#1a0000;
+border-radius:20px;
+overflow:hidden;
+}
+
+.progress-fill{
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#ff0000,#ff4040);
+}
+
+.progress-text{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-top:5px;
+color:#ff3b3b;
+}
+
+.assinatura{
+margin-top:15px;
+font-size:12px;
+opacity:0.6;
+color:#ff3b3b;
+text-align:center;
+}
+
 </style>
 </head>
 
@@ -110,66 +194,143 @@ z-index:-1;
 
 <canvas id="matrix"></canvas>
 
-<div class="container">
+<div id="painel">
 
-<h1>SHARKBOT AI</h1>
-<div id="assinatura">Developed by Henrique Sampaio</div>
+<div class="title">IA DOUBLE</div>
 
-<input type="file" id="upload">
+<div class="clock" id="hora"></div>
 
-<br><br>
+<button onclick="gerarSinal()">⚡ GERAR SINAL 🎯</button>
 
-<div id="previewBox">
-<img id="preview">
-<div id="scan"></div>
+<div class="sinal-box">
+
+<div id="sinal"></div>
+
+<div class="progress-box" id="progressBox">
+
+<div class="progress-bar">
+<div class="progress-fill" id="barra"></div>
 </div>
 
-<div id="barra">
-<div id="progresso">0%</div>
+<div class="progress-text">
+<span>Hacking progress...</span>
+<span id="porcentagem">0%</span>
 </div>
 
-<br>
+</div>
 
-<button onclick="analisar()">ANALISAR HISTÓRICO</button>
+<div class="next">JOGAR NA PRÓXIMA RODADA</div>
 
-<div id="resultado"></div>
+<div class="protecao" id="protecao"></div>
 
-<br>
+<div class="gale">Apostar até G1</div>
 
-<button onclick="copiar()">COPIAR LISTA</button>
+</div>
+
+<div class="assinatura">
+Desenvolvido por Henrique Sampaio
+</div>
 
 </div>
 
 <script>
 
-/* MATRIX */
+function atualizarHora(){
+
+let hora = new Date().toLocaleTimeString(
+"pt-BR",
+{timeZone:"America/Sao_Paulo"}
+)
+
+document.getElementById("hora").innerText="⏰ Brasília "+hora
+
+}
+
+setInterval(atualizarHora,1000)
+atualizarHora()
+
+function gerarSinal(){
+
+let barra=document.getElementById("barra")
+let porcentagem=document.getElementById("porcentagem")
+let progressBox=document.getElementById("progressBox")
+
+progressBox.style.display="block"
+
+let progresso=0
+
+let carregando=setInterval(()=>{
+
+progresso++
+
+barra.style.width=progresso+"%"
+porcentagem.innerText=progresso+"%"
+
+if(progresso>=100){
+
+clearInterval(carregando)
+mostrarSinal()
+
+}
+
+},30)
+
+}
+
+function mostrarSinal(){
+
+let cor=Math.random()<0.5?"red":"black"
+let protecao=Math.random()<0.1
+
+let container=document.createElement("div")
+container.classList.add("container-sinal")
+
+let mira=document.createElement("div")
+mira.classList.add("mira-fundo")
+
+let bola=document.createElement("div")
+bola.classList.add("ball",cor)
+
+container.appendChild(mira)
+container.appendChild(bola)
+
+let sinal=document.getElementById("sinal")
+sinal.innerHTML=""
+sinal.appendChild(container)
+
+if(protecao){
+document.getElementById("protecao").innerText="🛡 Proteção no Branco"
+}else{
+document.getElementById("protecao").innerText=""
+}
+
+}
 
 const canvas=document.getElementById("matrix")
 const ctx=canvas.getContext("2d")
 
-canvas.height=window.innerHeight
 canvas.width=window.innerWidth
+canvas.height=window.innerHeight
 
-const letters="01"
+const letters="0123456789"
 const fontSize=14
 const columns=canvas.width/fontSize
-
 const drops=[]
 
 for(let x=0;x<columns;x++)
 drops[x]=1
 
-function drawMatrix(){
+function draw(){
 
 ctx.fillStyle="rgba(0,0,0,0.05)"
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="#0F0"
+ctx.fillStyle="red"
 ctx.font=fontSize+"px monospace"
 
 for(let i=0;i<drops.length;i++){
 
-let text=letters[Math.floor(Math.random()*letters.length)]
+let text=letters.charAt(Math.random()*letters.length)
 
 ctx.fillText(text,i*fontSize,drops[i]*fontSize)
 
@@ -182,186 +343,7 @@ drops[i]++
 
 }
 
-setInterval(drawMatrix,33)
-
-/* BOT */
-
-let imagem=null
-let listaCopiar=""
-
-upload.addEventListener("change",function(e){
-
-let file=e.target.files[0]
-
-let reader=new FileReader()
-
-reader.onload=function(event){
-
-preview.src=event.target.result
-
-let img=new Image()
-
-img.src=event.target.result
-
-img.onload=function(){
-
-imagem=img
-
-}
-
-}
-
-reader.readAsDataURL(file)
-
-})
-
-async function analisar(){
-
-if(!imagem){
-
-alert("Envie um print")
-
-return
-
-}
-
-scan.style.display="block"
-barra.style.display="block"
-
-let progressoAtual=0
-
-let barraAnim=setInterval(()=>{
-
-progressoAtual++
-
-progresso.style.width=progressoAtual+"%"
-progresso.innerText=progressoAtual+"%"
-
-if(progressoAtual>=100){
-
-clearInterval(barraAnim)
-
-}
-
-},40)
-
-const worker=await Tesseract.createWorker()
-
-await worker.loadLanguage("eng")
-await worker.initialize("eng")
-
-const {data}=await worker.recognize(imagem)
-
-await worker.terminate()
-
-scan.style.display="none"
-
-let texto=data.text
-
-let numeros=texto.match(/\d+(\.\d+)?/g)
-
-if(!numeros){
-
-gerarLista(50,50)
-return
-
-}
-
-let porcentagens=[]
-
-numeros.forEach(n=>{
-
-let valor=parseFloat(n)
-
-if(valor>=1 && valor<=100){
-
-porcentagens.push(valor)
-
-}
-
-})
-
-if(porcentagens.length<2){
-
-gerarLista(50,50)
-return
-
-}
-
-let preto=porcentagens[0]
-let vermelho=porcentagens[1]
-
-gerarLista(vermelho,preto)
-
-}
-
-function gerarLista(v,p){
-
-let total=v+p
-
-let qPreto=Math.round((p/total)*10)
-let qVermelho=10-qPreto
-
-let cores=[]
-
-for(let i=0;i<qPreto;i++) cores.push("⚫")
-for(let i=0;i<qVermelho;i++) cores.push("🔴")
-
-cores.sort(()=>Math.random()-0.5)
-
-let agora=new Date()
-
-let lista=[]
-
-for(let i=0;i<10;i++){
-
-agora.setMinutes(agora.getMinutes()+3)
-
-let h=agora.getHours().toString().padStart(2,"0")
-let m=agora.getMinutes().toString().padStart(2,"0")
-
-lista.push(`${h}:${m} ${cores[i]} +⚪`)
-
-}
-
-mostrar(lista)
-
-}
-
-function mostrar(lista){
-
-resultado.innerHTML=""
-listaCopiar=""
-
-lista.forEach(l=>{
-
-resultado.innerHTML+=l+"<br>"
-listaCopiar+=l+"\n"
-
-})
-
-let rec=`
-
-RECOMENDAÇÕES
-
-• Entrada até G1
-• Evitar 4 cores seguidas
-• Não entrar após branco ⚪
-`
-
-resultado.innerHTML+="<br>"+rec.replace(/\n/g,"<br>")
-
-listaCopiar+=rec
-
-}
-
-function copiar(){
-
-navigator.clipboard.writeText(listaCopiar)
-
-alert("Lista copiada!")
-
-}
+setInterval(draw,33)
 
 </script>
 
